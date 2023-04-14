@@ -14,4 +14,9 @@ public static class ShaderTag
 
     #endregion
 
+    #region Lighting
+    
+    public static readonly ShaderTagId MAIN_LIGHT = new ShaderTagId("_MainLight");
+    
+    #endregion
 }

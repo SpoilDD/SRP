@@ -21,4 +21,6 @@ public class FPipelineAssetSetting
 {
     [Header("Batch Settings")]
     public bool SRPBatchingSwitch = true;
+    public bool DynamicBatchingSwitch = false;
+    public bool InstancingSwitch = true;
 }

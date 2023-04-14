@@ -41,7 +41,8 @@ public class FRenderPipeline : RenderPipeline
             CameraRender cameraRender = GetCameraRenderCls(camera);
 
             BeginCameraRendering(context, camera);
-
+            
+            cameraRender.SetParam(m_FPipelineAssetSetting.InstancingSwitch, m_FPipelineAssetSetting.DynamicBatchingSwitch);
             cameraRender.Render(context);
 
             EndCameraRendering(context, camera);
