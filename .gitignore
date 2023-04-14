@@ -1,0 +1,15 @@
+.idea
+/.vs
+/Library
+/Logs
+/obj
+/Temp
+/*.sln
+/*.csproj
+/ProjectSettings/ProjectVersion.txt
+/.vsconfig
+/Packages/packages-lock.json
+/.vscode
+/Assets/StreamingAssets
+/ExcelTemp
+Log/
