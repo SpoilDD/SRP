@@ -12,6 +12,7 @@ public class GameCameraRender : CameraRender
     private CullingResults m_CullingResults;
     private bool m_DynamicBatchingSwitch;
     private bool m_InstancingSwitch;
+    private ComputeBuffer m_MainLightBuffer;
 
     public GameCameraRender(Camera camera)
     {
@@ -93,9 +94,16 @@ public class GameCameraRender : CameraRender
         m_Context.DrawRenderers(m_CullingResults, ref ds, ref fs);
     }
 
-    public void SetCameraParam()
+    private void SetLightData()
     {
+        LightingManager.RefreshLight(m_CullingResults);
+    }
 
+    public void InitComputeBuff()
+    {
+        
+        m_MainLightBuffer = new ComputeBuffer(1, sizeof(DirectionalLight), ComputeBufferType.Constant);
+        
     }
 
 }

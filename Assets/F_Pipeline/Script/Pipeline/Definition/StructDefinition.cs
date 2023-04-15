@@ -1,6 +1,8 @@
 using System;
 using Unity.Mathematics;
-
+public static class StructDefinitions {
+		
+}
 
 [Serializable]
 public struct DirectionalLight
