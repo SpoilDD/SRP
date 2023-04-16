@@ -5,7 +5,7 @@ Shader "FPipeline/Lit"
         _MainTex ("Texture", 2D) = "white" {}
         
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src Blend", float) = 1
-        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Src Blend", float) = 1
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Src Blend", float) = 6
         [Enum(Off, 0, On, 1)] _ZWrite ("Z Write", float) = 1
     }
     SubShader
@@ -45,6 +45,7 @@ Shader "FPipeline/Lit"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            
 
             v2f vert (appdata v)
             {
@@ -63,7 +64,7 @@ Shader "FPipeline/Lit"
 	            UNITY_SETUP_INSTANCE_ID(i);
                 float4 col = tex2D(_MainTex, i.uv);
                 float3 normalWS = i.normalWS;
-                return dot(i.normalWS, float3(0,1,0));
+                return _MainLightColor;
             }
             ENDHLSL
         }

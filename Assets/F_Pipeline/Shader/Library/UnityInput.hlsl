@@ -21,6 +21,12 @@ CBUFFER_START(UnityPerDraw)
     float4 unity_MotionVectorsParams;
 CBUFFER_END
 
+CBUFFER_START(MainLight)
+    // DirectionalLight _MainLight; 
+    float4 _MainLightDirection;
+    float4 _MainLightColor;
+CBUFFER_END
+
 float4 _Time;
 float4 _SinTime;
 float4 _CosTime;

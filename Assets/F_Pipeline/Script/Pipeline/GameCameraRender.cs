@@ -2,9 +2,10 @@ using System;
 using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Rendering;
 
-public class GameCameraRender : CameraRender
+public unsafe class GameCameraRender : CameraRender
 {
     private CommandBuffer m_Cmd;
     private ScriptableRenderContext m_Context;
@@ -14,9 +15,12 @@ public class GameCameraRender : CameraRender
     private bool m_InstancingSwitch;
     private ComputeBuffer m_MainLightBuffer;
 
+    private DirectionalLight[] directionalLight;
+
     public GameCameraRender(Camera camera)
     {
         m_Camera = camera;
+        InitComputeBuff();
     }
 
     public override void SetParam(bool InstancingSwitch, bool DynamicBatchingSwitch)
@@ -38,6 +42,7 @@ public class GameCameraRender : CameraRender
         m_Cmd.BeginSample(m_Camera.name);
         ExecuteBuffer();
 
+        SetLightData();
 
         DrawOpaque();
 
@@ -97,11 +102,14 @@ public class GameCameraRender : CameraRender
     private void SetLightData()
     {
         LightingManager.RefreshLight(m_CullingResults);
+        directionalLight[0] = LightingManager.MainLightData;
+        m_MainLightBuffer.SetData(directionalLight);
+        m_Cmd.SetGlobalConstantBuffer(m_MainLightBuffer, ShaderTag.MAIN_LIGHT, 0, sizeof(DirectionalLight));
     }
 
     public void InitComputeBuff()
     {
-        
+        directionalLight = new DirectionalLight[1];
         m_MainLightBuffer = new ComputeBuffer(1, sizeof(DirectionalLight), ComputeBufferType.Constant);
         
     }

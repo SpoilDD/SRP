@@ -16,7 +16,7 @@ public static class ShaderTag
 
     #region Lighting
     
-    public static readonly ShaderTagId MAIN_LIGHT = new ShaderTagId("_MainLight");
+    public static readonly int MAIN_LIGHT = Shader.PropertyToID("MainLight");
     
     #endregion
 }
