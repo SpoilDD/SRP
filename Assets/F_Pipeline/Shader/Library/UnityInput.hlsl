@@ -43,5 +43,6 @@ float4x4 unity_MatrixPreviousVP;
 float4x4 unity_InvMatrixPreviousVP;
 float4x4 _NonJitteredMatrixVP;
 float4x4 _InvNonJitteredMatrixVP;
+float3 _WorldSpaceCameraPos;
 
 // #endif

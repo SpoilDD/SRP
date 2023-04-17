@@ -20,4 +20,13 @@
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 
+float3 GetCameraPositionWS()
+{
+    return _WorldSpaceCameraPos;
+}
+
+float3 GetViewPositionWS(float3 positionWS)
+{
+    return normalize(_WorldSpaceCameraPos - positionWS);
+}
 #endif

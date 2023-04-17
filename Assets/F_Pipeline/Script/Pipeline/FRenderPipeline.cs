@@ -7,12 +7,14 @@ using UnityEngine.Rendering;
 public class FRenderPipeline : RenderPipeline
 {
     FPipelineAssetSetting m_FPipelineAssetSetting;
+    FPipelineAssetShadowSetting m_ShoadwSetting;
 
     Dictionary<Camera, GameCameraRender> m_CameraRenderDic = new Dictionary<Camera, GameCameraRender>();
 
-    public FRenderPipeline(FPipelineAssetSetting setting)
+    public FRenderPipeline(FPipelineAssetSetting setting, FPipelineAssetShadowSetting shadowSetting)
     {
         m_FPipelineAssetSetting = setting;
+        m_ShoadwSetting = shadowSetting;
         GraphicsSettings.useScriptableRenderPipelineBatching = setting.SRPBatchingSwitch;
     }
 
@@ -42,7 +44,7 @@ public class FRenderPipeline : RenderPipeline
 
             BeginCameraRendering(context, camera);
             
-            cameraRender.SetParam(m_FPipelineAssetSetting.InstancingSwitch, m_FPipelineAssetSetting.DynamicBatchingSwitch);
+            cameraRender.SetParam(m_FPipelineAssetSetting, m_ShoadwSetting);
             cameraRender.Render(context);
 
             EndCameraRendering(context, camera);

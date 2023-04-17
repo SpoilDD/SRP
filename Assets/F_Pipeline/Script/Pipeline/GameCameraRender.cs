@@ -11,9 +11,10 @@ public unsafe class GameCameraRender : CameraRender
     private ScriptableRenderContext m_Context;
     private Camera m_Camera;
     private CullingResults m_CullingResults;
-    private bool m_DynamicBatchingSwitch;
-    private bool m_InstancingSwitch;
+    private FPipelineAssetShadowSetting m_ShadowSetting;
+    private FPipelineAssetSetting m_Setting;
     private ComputeBuffer m_MainLightBuffer;
+    private Shadows m_Shadow = new Shadows();
 
     private DirectionalLight[] directionalLight;
 
@@ -23,10 +24,10 @@ public unsafe class GameCameraRender : CameraRender
         InitComputeBuff();
     }
 
-    public override void SetParam(bool InstancingSwitch, bool DynamicBatchingSwitch)
+    public override void SetParam(FPipelineAssetSetting setting, FPipelineAssetShadowSetting shadowSetting)
     {
-        m_InstancingSwitch = InstancingSwitch;
-        m_DynamicBatchingSwitch = DynamicBatchingSwitch;
+        m_Setting = setting;
+        m_ShadowSetting = shadowSetting;
     }
 
     public override void Render(ScriptableRenderContext context)
@@ -41,6 +42,8 @@ public unsafe class GameCameraRender : CameraRender
         
         m_Cmd.BeginSample(m_Camera.name);
         ExecuteBuffer();
+        
+        m_Shadow.SetUp(context, m_CullingResults, m_ShadowSetting);
 
         SetLightData();
 
@@ -75,18 +78,16 @@ public unsafe class GameCameraRender : CameraRender
             return false;
         }
 
+        parameters.shadowDistance = Mathf.Min(m_ShadowSetting.ShadowDistance, m_Camera.farClipPlane);
         m_CullingResults = m_Context.Cull(ref parameters);
         return true;
     }
 
     public void DrawOpaque()
     {
-
         var sortingSettings = new SortingSettings(m_Camera) { criteria = SortingCriteria.OptimizeStateChanges };
-        var ds = new DrawingSettings(ShaderTag.FORWARD, sortingSettings){enableInstancing = m_InstancingSwitch, enableDynamicBatching = m_DynamicBatchingSwitch};
+        var ds = new DrawingSettings(ShaderTag.FORWARD, sortingSettings){enableInstancing = m_Setting.InstancingSwitch, enableDynamicBatching = m_Setting.DynamicBatchingSwitch};
         var fs = new FilteringSettings(RenderQueueRange.opaque);
-
-
         m_Context.DrawRenderers(m_CullingResults, ref ds, ref fs);
     }
 
@@ -105,6 +106,7 @@ public unsafe class GameCameraRender : CameraRender
         directionalLight[0] = LightingManager.MainLightData;
         m_MainLightBuffer.SetData(directionalLight);
         m_Cmd.SetGlobalConstantBuffer(m_MainLightBuffer, ShaderTag.MAIN_LIGHT, 0, sizeof(DirectionalLight));
+        ExecuteBuffer();
     }
 
     public void InitComputeBuff()

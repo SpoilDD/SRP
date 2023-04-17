@@ -12,7 +12,7 @@ abstract public class CameraRender : IDisposable
     virtual public void Dispose() { }
     abstract public void Render(ScriptableRenderContext context);
     
-    virtual public void SetParam(bool InstancingSwitch, bool DynamicBatchingSwitch){ }
+    virtual public void SetParam(FPipelineAssetSetting setting, FPipelineAssetShadowSetting shadowSetting){ }
 
 #if UNITY_EDITOR
     public void DrawGizmos(ScriptableRenderContext context, Camera camera)
