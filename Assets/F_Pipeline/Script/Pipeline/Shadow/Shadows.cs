@@ -21,6 +21,32 @@ public class Shadows
         m_ShadowSetting = shadowSetting;
     }
 
+    public void RenderDirectionalShadows(Light light, int lightIndex)
+    {
+        m_Cmd.BeginSample(buffName);
+        if (light.shadows != LightShadows.None && light.shadowStrength > 0f && m_CcullingResults.GetShadowCasterBounds(lightIndex, out var b))
+        {
+            int size = (int)m_ShadowSetting.directional.Size;
+            m_Cmd.GetTemporaryRT(ShaderTag.DIRECTIONAL_LIGHT_SHADOW_MAP, size, size, 32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
+            m_Cmd.SetRenderTarget(ShaderTag.DIRECTIONAL_LIGHT_SHADOW_MAP, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
+            m_Cmd.ClearRenderTarget(true, false, Color.clear);
+            ExecuteBuffer();
+
+            ShadowDrawingSettings shadowDrawingSettings = new ShadowDrawingSettings(m_CcullingResults, lightIndex);
+            // m_CcullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(lightIndex, 0, 1, Vector3.zero, )
+        }
+        else
+        {
+            m_Cmd.GetTemporaryRT(ShaderTag.DIRECTIONAL_LIGHT_SHADOW_MAP, 1,1,32,FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
+        }
+        m_Cmd.EndSample(buffName);
+    }
+
+    public void CleanUp()
+    {
+        m_Cmd.ReleaseTemporaryRT(ShaderTag.DIRECTIONAL_LIGHT_SHADOW_MAP);
+        ExecuteBuffer();
+    }
 
     void ExecuteBuffer()
     {

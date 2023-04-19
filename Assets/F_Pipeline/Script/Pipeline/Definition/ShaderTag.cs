@@ -19,4 +19,11 @@ public static class ShaderTag
     public static readonly int MAIN_LIGHT = Shader.PropertyToID("MainLight");
     
     #endregion
+    
+    
+    #region Lighting
+
+    public static readonly int DIRECTIONAL_LIGHT_SHADOW_MAP = Shader.PropertyToID("DirectionalLightShadowMap");
+
+    #endregion
 }
